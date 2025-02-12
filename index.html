@@ -1,1 +1,101 @@
-"hello world!" 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Simple</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">CRUD Simple</h1>
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <!-- Formulaire pour ajouter ou modifier un élément -->
+        <form id="itemForm" class="mb-3">
+          <div class="mb-3">
+            <label for="itemName" class="form-label"></label>
+            <input type="text" class="form-control" id="itemName" placeholder="Entrez un nom de l'élément" required>
+          </div>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Ajouter</button>
+        </form>
+
+        <!-- Liste des éléments -->
+        <h2>Liste des éléments</h2>
+        <ul id="itemList" class="list-group"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS et Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- JavaScript pour la logique CRUD -->
+  <script>
+    let items = []; // Liste pour stocker les éléments
+    let isEditing = false; // Indique si on est en mode édition
+    let editIndex = null; // Index de l'élément en cours d'édition
+
+    // Sélection des éléments du DOM
+    const itemForm = document.getElementById('itemForm');
+    const itemNameInput = document.getElementById('itemName');
+    const itemList = document.getElementById('itemList');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Fonction pour afficher les éléments
+    function displayItems() {
+      itemList.innerHTML = ''; // Vider la liste
+      items.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `
+          ${item}
+          <div>
+            <button class="btn btn-warning btn-sm me-2" onclick="editItem(${index})">Modifier</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteItem(${index})">Supprimer</button>
+          </div>
+        `;
+        itemList.appendChild(li);
+      });
+    }
+
+    // Fonction pour ajouter ou modifier un élément
+    itemForm.addEventListener('submit', (e) => {
+      e.preventDefault(); // Empêcher le rechargement de la page
+      const itemName = itemNameInput.value.trim();
+
+      if (itemName) {
+        if (isEditing) {
+          // Modifier l'élément existant
+          items[editIndex] = itemName;
+          isEditing = false;
+          editIndex = null;
+          submitBtn.textContent = 'Ajouter';
+        } else {
+          // Ajouter un nouvel élément
+          items.push(itemName);
+        }
+        itemNameInput.value = ''; // Vider le champ de saisie
+        displayItems(); // Mettre à jour l'affichage
+      }
+    });
+
+    // Fonction pour modifier un élément
+    function editItem(index) {
+      itemNameInput.value = items[index]; // Remplir le champ avec l'élément à modifier
+      isEditing = true;
+      editIndex = index;
+      submitBtn.textContent = 'Modifier';
+    }
+
+    // Fonction pour supprimer un élément
+    function deleteItem(index) {
+      items.splice(index, 1); // Supprimer l'élément
+      displayItems(); // Mettre à jour l'affichage
+    }
+
+    // Afficher les éléments au chargement de la page
+    displayItems();
+  </script>
+</body>
+</html>
