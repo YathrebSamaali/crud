@@ -31,3 +31,17 @@ jobs:
       - name: Run tests
         run: |
           python -m unittest discover
+
+deploy:
+runs-on: ubuntu-latest
+needs: test
+steps:
+
+- name: Checkout code
+uses: actions/checkout@v2
+- name: Deploy to Netlify
+uses: nwtgck/actions-netlify@v1
+with:
+auth_token: ${{ secrets.nfp_76TcHx6tqTAy3jngBKrxh5RbyhJGp4ph1789 }}
+site_id: ${{ secrets.cf71b977-f0d7-4f01-a30f-8f32881fa569 }}
+dir: ./build # ajustez ce chemin selon votre projet
