@@ -1,4 +1,3 @@
- 
 name: CI Workflow
 
 on:
@@ -32,16 +31,28 @@ jobs:
         run: |
           python -m unittest discover
 
-deploy:
-runs-on: ubuntu-latest
-needs: test
-steps:
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test  # Dépend du job de test
 
-- name: Checkout code
-uses: actions/checkout@v2
-- name: Deploy to Netlify
-uses: nwtgck/actions-netlify@v1
-with:
-auth_token: ${{ secrets.nfp_76TcHx6tqTAy3jngBKrxh5RbyhJGp4ph1789 }}
-site_id: ${{ secrets.cf71b977-f0d7-4f01-a30f-8f32881fa569 }}
-dir: ./build # ajustez ce chemin selon votre projet
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build project
+        run: |
+          npm run build
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1
+        with:
+          publish-dir: ./build  # Ajuste ce chemin selon ton projet
+          production: true
+          enable-pull-request-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.nfp_76TcHx6tqTAy3jngBKrxh5RbyhJGp4ph1789 }}
+          NETLIFY_SITE_ID: ${{ secrets.cf71b977-f0d7-4f01-a30f-8f32881fa569 }}
