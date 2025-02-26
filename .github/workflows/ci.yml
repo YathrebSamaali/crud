@@ -54,5 +54,7 @@ jobs:
           production: true
           enable-pull-request-comment: false
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.auth_token }}
-          NETLIFY_SITE_ID: ${{ secrets.site_id }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+         
